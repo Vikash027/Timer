@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    
+    <style>
+        .timer-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+input {
+    width: 50px; 
+    margin: 5px;
+}
+
+button {
+    margin: 5px;
+}
+
+#timer {
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+    </style>
+
+</head>
+<body>
+    <div class="timer-container">
+        <input type="number" id="hours" placeholder="Hours" min="0">
+        <input type="number" id="minutes" placeholder="Minutes" min="0" max="59">
+        <input type="number" id="seconds" placeholder="Seconds" min="0" max="59">
+        <button onclick="startTimer()">Start</button>
+        <button onclick="pauseTimer()">Pause</button>
+        <button onclick="resetTimer()">Reset</button>
+        <p id="timer"></p>
+    </div>
+ 
+    <script>
+        let timerInterval;
+let timerRunning = false;
+let hoursInput = document.getElementById("hours");
+let minutesInput = document.getElementById("minutes");
+let secondsInput = document.getElementById("seconds");
+let timerDisplay = document.getElementById("timer");
+
+function startTimer() {
+    if (!timerRunning) {
+        let totalSeconds = (parseInt(hoursInput.value) * 3600) + (parseInt(minutesInput.value) * 60) + parseInt(secondsInput.value);
+
+        if (totalSeconds <= 0 || isNaN(totalSeconds)) {
+            alert("Please enter a valid time.");
+            return;
+        }
+
+        timerRunning = true;
+        timerInterval = setInterval(updateTimer, 1000, totalSeconds);
+    }
+}
+
+function pauseTimer() {
+    clearInterval(timerInterval);
+    timerRunning = false;
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerDisplay.textContent = "00:00:00";
+}
+
+function updateTimer(totalSeconds) {
+    if (totalSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerDisplay.textContent = "00:00:00";
+    } else {
+        let hours = Math.floor(totalSeconds / 3600);
+        let minutes = Math.floor((totalSeconds % 3600) / 60);
+        let seconds = totalSeconds % 60;
+
+        timerDisplay.textContent = formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
+
+        totalSeconds--;
+    }
+}
+
+function formatTime(time) {
+    return time < 10 ? "0" + time : time;
+}
+
+    </script>
+</body>
+</html>
